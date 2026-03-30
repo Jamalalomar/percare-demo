@@ -1,0 +1,130 @@
+{
+  "info": {
+    "name": "PerCare Module API",
+    "description": "Complete API collection for PerCare Requests Module",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",   "value": "http://localhost:3000/api/percare" },
+    { "key": "request_id", "value": "" },
+    { "key": "slot_id",    "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Requests",
+      "item": [
+        {
+          "name": "Create Request",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/requests",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"external_request_id\": \"EXT-001\",\n  \"external_patient_id\": \"PAT-999\",\n  \"provider_id\": \"PROV-001\",\n  \"patient_name\": \"أحمد محمد\",\n  \"start_date\": \"2025-02-03\",\n  \"notes\": \"طلب رعاية منزلية\",\n  \"selected_services\": [\n    { \"service_code\": \"NURSING\", \"service_name\": \"تمريض منزلي\", \"weekly_frequency\": 5 },\n    { \"service_code\": \"PHYSIO\",  \"service_name\": \"علاج طبيعي\",  \"weekly_frequency\": 3 }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "List Requests",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/requests?page=1&limit=20",
+              "query": [
+                { "key": "page",   "value": "1" },
+                { "key": "limit",  "value": "20" },
+                { "key": "status", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Request Details",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/requests/{{request_id}}"
+          }
+        },
+        {
+          "name": "Get Request Slots",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/requests/{{request_id}}/slots"
+          }
+        },
+        {
+          "name": "Get Request Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/requests/{{request_id}}/stats"
+          }
+        },
+        {
+          "name": "Recalculate Schedule",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/requests/{{request_id}}/recalculate"
+          }
+        },
+        {
+          "name": "Cancel Request",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/requests/{{request_id}}/cancel",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"reason\": \"تغيير في الخطة\" }" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slots",
+      "item": [
+        {
+          "name": "Update Slot Status",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/slots/{{slot_id}}/status",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"status\": \"COMPLETED\", \"notes\": \"تم بنجاح\", \"performed_by\": \"nurse-01\" }"
+            }
+          }
+        },
+        {
+          "name": "Get Slot Logs",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/slots/{{slot_id}}/logs"
+          }
+        },
+        {
+          "name": "Bulk Update Slots",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/slots/bulk-update",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"slot_ids\": [\"uuid1\", \"uuid2\"], \"status\": \"COMPLETED\", \"performed_by\": \"nurse-01\" }"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "Mark Overdue Slots",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/jobs/mark-overdue"
+          }
+        }
+      ]
+    }
+  ]
+}
